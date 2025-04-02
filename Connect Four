@@ -6,3 +6,27 @@ git branch -M main
 git remote add origin https://github.com/Bwilson2loyno/Wilsonproject25.git
 git push -u origin main
 Connect Four
+
+#include <iostream>
+
+const int Rows = 6;
+const int Cols = 7;
+const char Emp = '.';
+const char PlayerX = 'A';
+const char PlayerY = 'B';
+
+class Connect4 {
+public:
+    Connect4() : board(Rows, <char>(Cols, Emp)),
+    currentPlayer(PlayerX)    }
+
+    void playGame() {
+
+    }
+
+
+
+int main() {
+    Connect4 game;
+    game.playGame();
+    return 0;

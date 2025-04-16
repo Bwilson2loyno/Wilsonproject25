@@ -1,10 +1,10 @@
-echo "# Wilsonproject25" >> README.md
+echo "# Wilsonproject25">> README.md
 git init
 git add README.md
 git commit -m "first commit"
 git branch -M main
 git remote add origin https://github.com/Bwilson2loyno/Wilsonproject25.git
-git push -u origin main
+git push u origin main;
 Connect Four
 
 #include <iostream>
@@ -20,7 +20,40 @@ public:
     Connect4() : board(Rows, <char>(Cols, Emp)),
     currentPlayer(PlayerX)    }
 
-    void playGame() {
+    void playGame(
+        bool gameWon = false;
+        while (!gameWon && !isBoardFull()) {
+            printBoard();
+            int col;
+            std::cout << "Player " << currentPlayer << ", enter column (0-6): ";
+            std::cin >> col;
+            if (makeMove(col)) {
+                gameWon = checkWin();
+                if (!gameWon) switchPlayer();
+            } else {
+                std::cout << "Column full or invalid. Try again.\n";
+            }
+        }
+        printBoard();
+        if (gameWon) {
+            std::cout << "Player " << currentPlayer << " wins!\n";
+        } else {
+            std::cout << "It's a draw!\n";
+        }
+    }
+
+private:
+    std::vector<std::vector<char>> board;
+    char currentPlayer;
+
+    void printBoard() {
+        for (const auto& row : board) {
+            for (char cell : row) {
+                std::cout << cell << ' ';
+            }
+            std::cout << '\n';
+        }
+    }) {
 
     }
 

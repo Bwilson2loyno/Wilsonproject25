@@ -8,6 +8,7 @@ git push u origin main;
 Connect Four
 
 #include <iostream>
+#include <vector>
 
 const int Rows = 6;
 const int Cols = 7;
@@ -17,11 +18,11 @@ const char PlayerY = 'B';
 
 class Connect4 {
 public:
-    Connect4() : board(Rows, <char>(Cols, Emp)),
+    Connect4() : board(Rows,std::vector<char>(Cols, Emp)),
     currentPlayer(PlayerX)    }
 
-    void playGame(
-        bool gameWon = false;
+    void playGame() {
+        bool gameWon = false,
         while (!gameWon && !isBoardFull()) {
             printBoard();
             int col;
@@ -53,8 +54,83 @@ private:
             }
             std::cout << '\n';
         }
-    }) {
+    }
 
+    bool makeMove(int col) {
+        if (col < 0 || col >= Cols) return false;
+        for (int row = Rows - 1; row >= 0; --row) {
+            if (board[row][col] == EMPTY) {
+                board[row][col] = currentPlayer;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    void switchPlayer() {
+        currentPlayer = (currentPlayer == PlayerX) ? PlayerY : PlayerX;
+    }
+
+    bool isBoardFull() {
+        for (const auto& row : board) {
+            for (char cell : row) {
+                if (cell == EMPTY) return false;
+            }
+        }
+        return true;
+    }
+    bool checkWin() {
+        return checkHorizontal() || checkVertical() || checkDiagonal();
+    }
+
+    bool checkHorizontal() {
+        for (int row = 0; row < Rows; ++row) {
+            for (int col = 0; col <= Cols - 4; ++col) {
+                if (board[row][col] == currentPlayer &&
+                    board[row][col + 1] == currentPlayer &&
+                    board[row][col + 2] == currentPlayer &&
+                    board[row][col + 3] == currentPlayer) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    bool checkVertical() {
+        for (int col = 0; col < Cols; ++col) {
+            for (int row = 0; row <= Rows - 4; ++row) {
+                if (board[row][col] == currentPlayer &&
+                    board[row + 1][col] == currentPlayer &&
+                    board[row + 2][col] == currentPlayer &&
+                    board[row + 3][col] == currentPlayer) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    bool checkDiagonal() {
+        for (int row = 0; row <= Rows - 4; ++row) {
+            for (int col = 0; col <= Cols - 4; ++col) {
+                if (board[row][col] == currentPlayer &&
+                    board[row + 1][col + 1] == currentPlayer &&
+                    board[row + 2][col + 2] == currentPlayer &&
+                    board[row + 3][col + 3] == currentPlayer) {
+                    return true;
+                }
+            }
+            for (int col = 3; col < Cols; ++col) {
+                if (board[row][col] == currentPlayer &&
+                    board[row + 1][col - 1] == currentPlayer &&
+                    board[row + 2][col - 2] == currentPlayer &&
+                    board[row + 3][col - 3] == currentPlayer) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 

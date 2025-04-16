@@ -25,24 +25,16 @@ public:
         bool gameWon = false,
         while (!gameWon && !isBoardFull()) {
             printBoard();
-            int col;
-            std::cout << "Player " << currentPlayer << ", enter column (0-6): ";
-            std::cin >> col;
-            if (makeMove(col)) {
-                gameWon = checkWin();
-                if (!gameWon) switchPlayer();
-            } else {
-                std::cout << "Column full or invalid. Try again.\n";
-            }
-        }
-        int col;
-        std::cout << "Player " << currentPlayer << ", enter column (0-6): ";
-        if (!(std::cin >> col) || col < 0 || col >= Cols) {
-            std::cin.clear(); // Clear error flags
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Ignore invalid input
-            std::cout << "Invalid input. Please enter a number between 0 and 6.\n";
-            continue;
+
             
+             int col;
+             std::cout << "Player " << currentPlayer << ", enter column (0-6): ";
+                if (!(std::cin >> col) || col < 0 || col >= Cols) {
+                std::cin.clear(); // Clear error flags
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Ignore invalid input
+                std::cout << "Invalid input. Please enter a number between 0 and 6.\n";
+                continue;
+
         printBoard();
         if (gameWon) {
             std::cout << "Player " << currentPlayer << " wins!\n";

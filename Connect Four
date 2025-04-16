@@ -7,39 +7,51 @@ git remote add origin https://github.com/Bwilson2loyno/Wilsonproject25.git
 git push u origin main;
 Connect Four
 
-#include <iostream>
+include <iostream>
 #include <vector>
+#include <limits>
 
 const int Rows = 6;
 const int Cols = 7;
-const char Emp = '.';
+const char Empty = '.';
 const char PlayerX = 'A';
 const char PlayerY = 'B';
 
 class Connect4 {
 public:
-    Connect4() : board(Rows,std::vector<char>(Cols, Emp)),
-    currentPlayer(PlayerX)    }
+    Connect4() : board(Rows, std::vector<char>(Cols, Empty)), currentPlayer(PlayerX) {}
 
     void playGame() {
-        bool gameWon = false,
+        bool gameWon = false;
         while (!gameWon && !isBoardFull()) {
             printBoard();
 
-             int col;
-             std::cout << "Player " << currentPlayer << ", enter column (0-6): ";
-                if (!(std::cin >> col) || col < 0 || col >= Cols) {
+            int col;
+            std::cout << "Player " << currentPlayer << ", enter column (0-6): ";
+            if (!(std::cin >> col) || col < 0 || col >= Cols) {
                 std::cin.clear(); // Clear error flags
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Ignore invalid input
                 std::cout << "Invalid input. Please enter a number between 0 and 6.\n";
                 continue;
+            }
+
+            if (!makeMove(col)) {
+                std::cout << "Column " << col << " is full. Try a different column.\n";
+                continue;
+            }
+
+            if (checkWin()) {
+                gameWon = true;
+                printBoard();
+                std::cout << "Player " << currentPlayer << " wins!\n";
+                return;
+            }
+
+            switchPlayer();
+        }
 
         printBoard();
-        if (gameWon) {
-            std::cout << "Player " << currentPlayer << " wins!\n";
-        } else {
-            std::cout << "It's a draw!\n";
-        }
+        std::cout << "It's a draw!\n";
     }
 
 private:
@@ -58,7 +70,7 @@ private:
     bool makeMove(int col) {
         if (col < 0 || col >= Cols) return false;
         for (int row = Rows - 1; row >= 0; --row) {
-            if (board[row][col] == Emp) {
+            if (board[row][col] == Empty) {
                 board[row][col] = currentPlayer;
                 return true;
             }
@@ -73,11 +85,12 @@ private:
     bool isBoardFull() {
         for (const auto& row : board) {
             for (char cell : row) {
-                if (cell == Emp) return false;
+                if (cell == Empty) return false;
             }
         }
         return true;
     }
+
     bool checkWin() {
         return checkHorizontal() || checkVertical() || checkDiagonal();
     }
@@ -111,6 +124,7 @@ private:
     }
 
     bool checkDiagonal() {
+        // Check for diagonals (top-left to bottom-right)
         for (int row = 0; row <= Rows - 4; ++row) {
             for (int col = 0; col <= Cols - 4; ++col) {
                 if (board[row][col] == currentPlayer &&
@@ -120,6 +134,9 @@ private:
                     return true;
                 }
             }
+        }
+        // Check for diagonals (bottom-left to top-right)
+        for (int row = 0; row <= Rows - 4; ++row) {
             for (int col = 3; col < Cols; ++col) {
                 if (board[row][col] == currentPlayer &&
                     board[row + 1][col - 1] == currentPlayer &&
@@ -131,8 +148,7 @@ private:
         }
         return false;
     }
-
-
+};
 
 int main() {
     Connect4 game;

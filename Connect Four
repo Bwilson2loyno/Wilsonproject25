@@ -26,7 +26,6 @@ public:
         while (!gameWon && !isBoardFull()) {
             printBoard();
 
-            
              int col;
              std::cout << "Player " << currentPlayer << ", enter column (0-6): ";
                 if (!(std::cin >> col) || col < 0 || col >= Cols) {

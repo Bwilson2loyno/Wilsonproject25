@@ -1,0 +1,149 @@
+// Project Name: Connect4
+// Author: Bailey Wilson
+// Date Last Modified: 04/16/25
+
+#include <iostream>
+#include <vector>
+
+const int Rows = 6;
+const int Cols = 7;
+const char Emp = '.';
+const char PlayerX = 'A';
+const char PlayerY = 'B';
+
+class Connect4 {
+public:
+    Connect4() : board(Rows, std::vector<char>(Cols, Emp)), currentPlayer(PlayerX), playerXWins(0), playerYWins(0) {}
+
+    void playGame() {
+        bool gameWon = false;
+        while (!gameWon && !isBoardFull()) {
+            printBoard();
+            int col;
+            std::cout << "Player " << currentPlayer << ", enter column (0-6): ";
+            std::cin >> col;
+            if (makeMove(col)) {
+                gameWon = checkWin();
+                if (!gameWon) switchPlayer();
+            } else {
+                std::cout << "Column full or invalid. Try again.\n";
+            }
+        }
+        printBoard();
+        if (gameWon) {
+            if (currentPlayer == PlayerX) {
+                ++playerXWins;
+            } else {
+                ++playerYWins;
+            }
+            std::cout << "Player " << currentPlayer << " wins!\n";
+        } else {
+            std::cout << "It's a draw!\n";
+        }
+        std::cout << "Player A Wins: " << playerXWins << ", Player B Wins: " << playerYWins << '\n';
+    }
+
+private:
+    std::vector<std::vector<char>> board;
+    char currentPlayer;
+    int playerXWins;
+    int playerYWins;
+
+    void printBoard() {
+        for (const auto& row : board) {
+            for (char cell : row) {
+                std::cout << cell << ' ';
+            }
+            std::cout << '\n';
+        }
+    }
+
+    bool makeMove(int col) {
+        if (col < 0 || col >= Cols) return false;
+        for (int row = Rows - 1; row >= 0; --row) {
+            if (board[row][col] == Emp) {
+                board[row][col] = currentPlayer;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    void switchPlayer() {
+        currentPlayer = (currentPlayer == PlayerX) ? PlayerY : PlayerX;
+    }
+
+    bool isBoardFull() {
+        for (const auto& row : board) {
+            for (char cell : row) {
+                if (cell == Emp) return false;
+            }
+        }
+        return true;
+    }
+
+    bool checkWin() {
+        return checkHorizontal() || checkVertical() || checkDiagonal();
+    }
+
+    bool checkHorizontal() {
+        for (int row = 0; row < Rows; ++row) {
+            for (int col = 0; col <= Cols - 4; ++col) {
+                if (board[row][col] == currentPlayer &&
+                    board[row][col + 1] == currentPlayer &&
+                    board[row][col + 2] == currentPlayer &&
+                    board[row][col + 3] == currentPlayer) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    bool checkVertical() {
+        for (int col = 0; col < Cols; ++col) {
+            for (int row = 0; row <= Rows - 4; ++row) {
+                if (board[row][col] == currentPlayer &&
+                    board[row + 1][col] == currentPlayer &&
+                    board[row + 2][col] == currentPlayer &&
+                    board[row + 3][col] == currentPlayer) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    bool checkDiagonal() {
+        for (int row = 0; row <= Rows - 4; ++row) {
+            for (int col = 0; col <= Cols - 4; ++col) {
+                if (board[row][col] == currentPlayer &&
+                    board[row + 1][col + 1] == currentPlayer &&
+                    board[row + 2][col + 2] == currentPlayer &&
+                    board[row + 3][col + 3] == currentPlayer) {
+                    return true;
+                }
+            }
+            for (int col = 3; col < Cols; ++col) {
+                if (board[row][col] == currentPlayer &&
+                    board[row + 1][col - 1] == currentPlayer &&
+                    board[row + 2][col - 2] == currentPlayer &&
+                    board[row + 3][col - 3] == currentPlayer) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+};
+
+int main() {
+    char replay;
+    do {
+        Connect4 game;
+        game.playGame();
+        std::cout << "Do you want to play again? (y/n): ";
+        std::cin >> replay;
+    } while (replay == 'y' || replay == 'Y');
+    return 0;
+}

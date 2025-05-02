@@ -1,11 +1,6 @@
-echo "# Wilsonproject25">> README.md
-git init
-git add README.md
-git commit -m "first commit"
-git branch -M main
-git remote add origin https://github.com/Bwilson2loyno/Wilsonproject25.git
-git push u origin main;
-Connect Four
+// Project Name: Connect4
+// Author: Bailey Wilson
+// Date Last Modified: 04/16/25
 
 #include <iostream>
 #include <vector>
@@ -18,11 +13,10 @@ const char PlayerY = 'B';
 
 class Connect4 {
 public:
-    Connect4() : board(Rows,std::vector<char>(Cols, Emp)),
-    currentPlayer(PlayerX)    }
+    Connect4() : board(Rows, std::vector<char>(Cols, Emp)), currentPlayer(PlayerX), playerXWins(0), playerYWins(0) {}
 
     void playGame() {
-        bool gameWon = false,
+        bool gameWon = false;
         while (!gameWon && !isBoardFull()) {
             printBoard();
             int col;
@@ -37,15 +31,23 @@ public:
         }
         printBoard();
         if (gameWon) {
+            if (currentPlayer == PlayerX) {
+                ++playerXWins;
+            } else {
+                ++playerYWins;
+            }
             std::cout << "Player " << currentPlayer << " wins!\n";
         } else {
             std::cout << "It's a draw!\n";
         }
+        std::cout << "Player A Wins: " << playerXWins << ", Player B Wins: " << playerYWins << '\n';
     }
 
 private:
     std::vector<std::vector<char>> board;
     char currentPlayer;
+    int playerXWins;
+    int playerYWins;
 
     void printBoard() {
         for (const auto& row : board) {
@@ -59,7 +61,7 @@ private:
     bool makeMove(int col) {
         if (col < 0 || col >= Cols) return false;
         for (int row = Rows - 1; row >= 0; --row) {
-            if (board[row][col] == EMPTY) {
+            if (board[row][col] == Emp) {
                 board[row][col] = currentPlayer;
                 return true;
             }
@@ -74,11 +76,12 @@ private:
     bool isBoardFull() {
         for (const auto& row : board) {
             for (char cell : row) {
-                if (cell == EMPTY) return false;
+                if (cell == Emp) return false;
             }
         }
         return true;
     }
+
     bool checkWin() {
         return checkHorizontal() || checkVertical() || checkDiagonal();
     }
@@ -132,10 +135,15 @@ private:
         }
         return false;
     }
-
-
+};
 
 int main() {
-    Connect4 game;
-    game.playGame();
+    char replay;
+    do {
+        Connect4 game;
+        game.playGame();
+        std::cout << "Do you want to play again? (y/n): ";
+        std::cin >> replay;
+    } while (replay == 'y' || replay == 'Y');
     return 0;
+}

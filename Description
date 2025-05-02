@@ -1,0 +1,8 @@
+Connect Four Programming Project 
+Spring 2025
+I am going to make a functional game of Connect Four
+The board is 6x7 and the goal is to connect four in a row (diagonal, horizontal or vertical)
+The main function should create and start the game
+Two players take turns each trying to connect four in a row
+Once one player has won you will get the option to replay
+If the board fills and there is no clear winner, the game will declare a draw
